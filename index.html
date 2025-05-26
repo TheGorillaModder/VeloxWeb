@@ -1,189 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
   <title>VeloxWeb</title>
   <style>
     :root {
-      --primary-color: #1a1a1a;
-      --accent-color: #007bff;
-      --text-color: white;
-      --bg-color: #121212;
+      --fore-gradient: linear-gradient(145deg, #ffffff, #eeeeee);
+      --back-gradient: linear-gradient(145deg, #444444, #000000);
     }
 
-    [data-theme="red"] {
-      --accent-color: red;
-    }
-    [data-theme="green"] {
-      --accent-color: green;
-    }
-    [data-theme="blue"] {
-      --accent-color: blue;
-    }
-    [data-theme="purple"] {
-      --accent-color: purple;
+    * {
+      box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      overflow-x: hidden;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--back-gradient);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 100%;
+      height: 100vh;
+      transition: background 0.3s, color 0.3s;
     }
 
-    .top-bar {
+    header {
+      width: 100%;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 10px 20px;
-      background-color: var(--primary-color);
-      border-bottom: 1px solid var(--accent-color);
+      align-items: center;
+      padding: 10px 30px;
+      background: var(--fore-gradient);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
     .url-bar {
-      flex: 1;
-      margin: 0 20px;
-      height: 30px;
-      max-height: 30px;
-      border-radius: 5px;
+      width: 80%;
+      padding: 12px;
+      border-radius: 10px;
       border: none;
-      padding: 5px 10px;
-      font-size: 14px;
+      font-size: 16px;
+      background: var(--fore-gradient);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       overflow: hidden;
     }
 
-    .search-container {
-      text-align: center;
-      margin-top: 20vh;
+    .right-buttons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
 
-    .engine-title {
-      font-size: 48px;
+    #googleBtn, #settingsBtn {
+      cursor: pointer;
+      padding: 10px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #000;
+      margin-right: 20px;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 80px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 3rem;
       margin-bottom: 20px;
-      color: var(--accent-color);
+      color: white;
+      text-shadow: 1px 1px 3px black;
     }
 
     .search-bar {
-      width: 50%;
-      padding: 15px;
-      border-radius: 25px;
-      border: none;
+      width: 60%;
+      padding: 14px;
       font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      background: var(--fore-gradient);
+      color: #000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
-    .theme-option {
-      cursor: pointer;
-      margin-right: 10px;
-    }
-
-    .settings-panel {
-      display: none;
+    #settingsPanel {
       position: fixed;
       top: 60px;
-      right: 20px;
-      background-color: #2a2a2a;
+      right: 30px;
+      background: rgba(0,0,0,0.8);
       padding: 20px;
       border-radius: 10px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
       z-index: 999;
     }
 
-    .settings-button {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: var(--accent-color);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      font-size: 18px;
-      cursor: pointer;
+    #settingsPanel label {
+      font-size: 0.9rem;
+      color: #eee;
     }
 
     footer {
-      text-align: center;
-      margin-top: 50px;
-      color: gray;
+      margin-top: auto;
+      padding: 20px;
+      color: #aaa;
+    }
+
+    #bgOptions button {
+      margin: 5px;
+      padding: 6px 12px;
+      background: var(--fore-gradient);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #000;
+    }
+
+    input[type="color"] {
+      width: 100%;
+      height: 30px;
+      border: none;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+
+    #customBg {
+      display: none;
     }
   </style>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
-  <div class="top-bar">
-    <span class="engine-title" style="font-size: 20px; margin: 0;">VeloxWeb</span>
-    <input class="url-bar" placeholder="Search or enter URL" />
-  </div>
+  <header>
+    <div class="logo">VeloxWeb</div>
+    <input
+      class="url-bar"
+      type="text"
+      placeholder="Enter URL or search..."
+      id="urlBar"
+      onkeydown="if(event.key === 'Enter') { navigateOrSearch('urlBar'); }"
+    />
+    <div class="right-buttons">
+      <button id="googleBtn" onclick="google.accounts.id.prompt()">🔒</button>
+      <button id="settingsBtn" onclick="toggleSettings()">⚙️</button>
+    </div>
+  </header>
 
-  <div class="search-container">
-    <div class="engine-title">VeloxWeb</div>
-    <input type="text" class="search-bar" placeholder="Search the web...">
-  </div>
+  <main>
+    <h1>VeloxWeb</h1>
+    <input class="search-bar" type="text" placeholder="Search something..." id="searchBar" />
+  </main>
 
-  <button class="settings-button" onclick="toggleSettings()">⚙️</button>
+  <div id="settingsPanel">
+    <label>Pick Foreground Color:</label>
+    <input type="color" onchange="applyModernTheme(this.value)" id="foreColor" />
 
-  <div class="settings-panel" id="settingsPanel">
-    <h3>Color Scheme</h3>
-    <div>
-      <span class="theme-option" onclick="setTheme('default')">Default</span>
-      <span class="theme-option" onclick="setTheme('red')">Red</span>
-      <span class="theme-option" onclick="setTheme('green')">Green</span>
-      <span class="theme-option" onclick="setTheme('blue')">Blue</span>
-      <span class="theme-option" onclick="setTheme('purple')">Purple</span>
+    <label>Pick Background Color:</label>
+    <input type="color" onchange="applyModernBackground(this.value)" id="backColor" />
+
+    <label>Choose Background Image:</label>
+    <div id="bgOptions">
+      <button onclick="setBackground('custom')">Upload</button>
+      <input type="file" id="customBg" accept="image/*" onchange="useUploadedImage(event)" />
     </div>
   </div>
 
-  <div id="g_id_onload"
-       data-client_id="38445674745-aulk5kr6hehevi1h3ftehrb8l6bbbeuj.apps.googleusercontent.com"
-       data-context="signin"
-       data-ux_mode="popup"
-       data-callback="handleGoogleLogin"
-       data-auto_prompt="false">
-  </div>
-  <div class="g_id_signin"
-       data-type="standard"
-       data-size="large"
-       data-theme="outline"
-       data-text="sign_in_with"
-       data-shape="rectangular"
-       data-logo_alignment="left">
-  </div>
+  <footer>by TGM (TheGorillaModder)</footer>
 
-  <footer>
-    by TGM (TheGorillaModder)
-  </footer>
+  <!-- Google Login -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <div
+    id="g_id_onload"
+    data-client_id="38445674745-aulk5kr6hehevi1h3ftehrb8l6bbbeuj.apps.googleusercontent.com"
+    data-context="signin"
+    data-ux_mode="popup"
+    data-callback="handleGoogleLogin"
+    data-auto_prompt="false"
+  ></div>
 
   <script>
     function toggleSettings() {
       const panel = document.getElementById('settingsPanel');
-      panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+      panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    function setTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      if (window.loggedIn) {
-        localStorage.setItem('velox_theme_google', theme);
-        // You’d normally sync to cloud here via Google Drive or Firebase
+    function hexToRGB(hex) {
+      let r = 0,
+        g = 0,
+        b = 0;
+      if (hex.length === 4) {
+        r = parseInt(hex[1] + hex[1], 16);
+        g = parseInt(hex[2] + hex[2], 16);
+        b = parseInt(hex[3] + hex[3], 16);
+      } else if (hex.length === 7) {
+        r = parseInt(hex[1] + hex[2], 16);
+        g = parseInt(hex[3] + hex[4], 16);
+        b = parseInt(hex[5] + hex[6], 16);
+      }
+      return { r, g, b };
+    }
+
+    function darkenColor({ r, g, b }, factor = 0.8) {
+      return `rgb(${Math.floor(r * factor)}, ${Math.floor(g * factor)}, ${Math.floor(b * factor)})`;
+    }
+
+    function applyModernTheme(foreHex) {
+      const rgb = hexToRGB(foreHex);
+      const dark = darkenColor(rgb, 0.8);
+      document.documentElement.style.setProperty('--fore-gradient', `linear-gradient(145deg, ${dark}, ${foreHex})`);
+      localStorage.setItem('modern_fore', foreHex);
+      saveSettings();
+    }
+
+    function applyModernBackground(backHex) {
+      const rgb = hexToRGB(backHex);
+      const dark = darkenColor(rgb, 0.8);
+      document.documentElement.style.setProperty('--back-gradient', `linear-gradient(145deg, ${dark}, ${backHex})`);
+      document.body.style.backgroundImage = 'none'; // override image
+      localStorage.setItem('modern_back', backHex);
+      localStorage.removeItem('velox_bg');
+      saveSettings();
+    }
+
+    function setBackground(image) {
+      if (image === 'custom') {
+        document.getElementById('customBg').click();
       } else {
-        localStorage.setItem('velox_theme', theme);
+        document.body.style.backgroundImage = `url('${image}')`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        document.body.style.backgroundPosition = 'center';
+        localStorage.setItem('velox_bg', image);
+        document.documentElement.style.setProperty('--back-gradient', 'none');
+        localStorage.removeItem('modern_back');
+        saveSettings();
       }
     }
 
-    function applyStoredTheme() {
-      const theme = window.loggedIn ? localStorage.getItem('velox_theme_google') : localStorage.getItem('velox_theme');
-      if (theme) document.documentElement.setAttribute('data-theme', theme);
+    function useUploadedImage(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        document.body.style.backgroundImage = `url('${reader.result}')`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        document.body.style.backgroundPosition = 'center';
+        localStorage.setItem('velox_bg', reader.result);
+        document.documentElement.style.setProperty('--back-gradient', 'none');
+        localStorage.removeItem('modern_back');
+        saveSettings();
+      };
+      reader.readAsDataURL(file);
     }
 
+    // Navigate or Search on Enter in URL bar
+    function navigateOrSearch(elId) {
+      const urlBar = document.getElementById(elId);
+      let query = urlBar.value.trim();
+      if (!query) return;
+
+      // Basic URL check
+      const hasScheme = query.startsWith('http://') || query.startsWith('https://');
+      const hasDot = query.includes('.');
+
+      if (hasScheme || hasDot) {
+        if (!hasScheme) query = 'https://' + query;
+        window.location.href = query;
+      } else {
+        // Search with Google
+        const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+        window.location.href = searchUrl;
+      }
+    }
+
+    // Google Identity login callback
+    let googleUser = null;
     function handleGoogleLogin(response) {
-      console.log("Logged in with Google", response);
-      window.loggedIn = true;
-      applyStoredTheme();
+      // Decode JWT and extract basic info (for demo)
+      const data = parseJwt(response.credential);
+      googleUser = data;
+      // Save login user to localStorage
+      localStorage.setItem('google_user', JSON.stringify(data));
+      alert('Logged in as ' + data.name);
+      loadSettings(); // Load user-specific settings after login
     }
 
-    window.addEventListener('load', () => {
-      applyStoredTheme();
+    function parseJwt(token) {
+      let base64Url = token.split('.')[1];
+      let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      let jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    }
+
+    // Save settings to localStorage keyed by google user ID or fallback
+    function saveSettings() {
+      const settings = {
+        fore: localStorage.getItem('modern_fore') || '',
+        back: localStorage.getItem('modern_back') || '',
+        bgImage: localStorage.getItem('velox_bg') || '',
+        urlValue: document.getElementById('urlBar').value || '',
+      };
+      if (googleUser && googleUser.sub) {
+        localStorage.setItem('velox_settings_' + googleUser.sub, JSON.stringify(settings));
+      } else {
+        localStorage.setItem('velox_settings_guest', JSON.stringify(settings));
+      }
+    }
+
+    // Load settings on page load or login
+    function loadSettings() {
+      let settings = null;
+      if (googleUser && googleUser.sub) {
+        settings = JSON.parse(localStorage.getItem('velox_settings_' + googleUser.sub));
+      }
+      if (!settings) {
+        settings = JSON.parse(localStorage.getItem('velox_settings_guest'));
+      }
+      if (settings) {
+        if (settings.fore) {
+          document.getElementById('foreColor').value = settings.fore;
+          applyModernTheme(settings.fore);
+        }
+        if (settings.back) {
+          document.getElementById('backColor').value = settings.back;
+          applyModernBackground(settings.back);
+        }
+        if (settings.bgImage) {
+          document.body.style.backgroundImage = `url('${settings.bgImage}')`;
+          document.body.style.backgroundSize = 'cover';
+          document.body.style.backgroundRepeat = 'no-repeat';
+          document.body.style.backgroundPosition = 'center';
+          document.documentElement.style.setProperty('--back-gradient', 'none');
+        }
+        if (settings.urlValue) {
+          document.getElementById('urlBar').value = settings.urlValue;
+        }
+      }
+    }
+
+    // On page load, initialize
+    window.onload = () => {
+      loadSettings();
+    };
+
+    // Save settings on changes to URL bar and color pickers
+    document.getElementById('urlBar').addEventListener('input', saveSettings);
+    document.getElementById('foreColor').addEventListener('input', (e) => {
+      applyModernTheme(e.target.value);
+      saveSettings();
+    });
+    document.getElementById('backColor').addEventListener('input', (e) => {
+      applyModernBackground(e.target.value);
+      saveSettings();
+    });
+    document.getElementById('searchBar').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        navigateOrSearch('searchBar');
+      }
     });
   </script>
 </body>
