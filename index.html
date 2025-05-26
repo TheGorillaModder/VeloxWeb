@@ -192,7 +192,7 @@
     data-context="signin"
     data-ux_mode="popup"
     data-callback="handleGoogleLogin"
-    data-auto_prompt="false"
+    data-auto_prompt="true"
   ></div>
 
   <script>
@@ -366,7 +366,16 @@
       loadSettings();
     };
 
-    // Save settings on changes to URL bar and color pickers
+    window.onload = () => {
+      google.accounts.id.initialize({
+        client_id: '38445674745-aulk5kr6hehevi1h3ftehrb8l6bbbeuj.apps.googleusercontent.com',
+        callback: handleGoogleLogin,
+        auto_select: true
+      });
+      google.accounts.id.prompt(); 
+      loadSettings();
+    };
+    
     document.getElementById('urlBar').addEventListener('input', saveSettings);
     document.getElementById('foreColor').addEventListener('input', (e) => {
       applyModernTheme(e.target.value);
